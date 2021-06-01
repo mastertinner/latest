@@ -19,20 +19,18 @@ var (
 // Upgrade updates and upgrades brew.
 func (u *upgrader) Upgrade(upgradesCh chan<- latest.Upgrade) error {
 	udCmd := exec.Command("brew", "update")
+	ugCmd := exec.Command("brew", "upgrade", "--cleanup")
+
 	if u.verbose {
 		udCmd.Stdout = os.Stdout
 		udCmd.Stderr = os.Stderr
+		ugCmd.Stdout = os.Stdout
+		ugCmd.Stderr = os.Stderr
 	}
 
 	err := udCmd.Run()
 	if err != nil {
 		return fmt.Errorf("error running brew update: %w", err)
-	}
-
-	ugCmd := exec.Command("brew", "upgrade", "--cleanup")
-	if u.verbose {
-		ugCmd.Stdout = os.Stdout
-		ugCmd.Stderr = os.Stderr
 	}
 
 	ugOut, err := ugCmd.Output()
